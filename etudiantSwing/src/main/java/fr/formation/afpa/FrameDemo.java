@@ -5,12 +5,19 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+
 /**
  * Hello world!
  *
  */
 public class FrameDemo extends JFrame implements WindowListener {
+	public static final Log log = LogFactory.getLog(FrameDemo.class);
+	
 	public static void main(String[] args) {
+		log.debug("Test");
 		FrameDemo fd = new FrameDemo(); 
 				
 	}

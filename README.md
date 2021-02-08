@@ -1,2 +1,2 @@
 # SwingStudents
-Swing list of students
+Projet Afpa Swing list of students

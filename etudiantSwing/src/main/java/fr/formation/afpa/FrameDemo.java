@@ -4,6 +4,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.WindowConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,19 +21,29 @@ public class FrameDemo extends JFrame implements WindowListener {
 	public static final Log log = LogFactory.getLog(FrameDemo.class);
 	
 	public static void main(String[] args) {
-		log.debug("Test");
+		// log.debug("Test");
 		FrameDemo fd = new FrameDemo(); 
-				
+	
+		
 	}
 	 
     public FrameDemo() {
         super("Frame Demo");
-        // initialization code...
+        
+    	JMenuBar menuBar = new JMenuBar();
+		JMenu studentBar = new JMenu("Etudiant");
+		JMenuItem add = new JMenuItem("Ajouter");
+		JMenuItem liste = new JMenuItem("Liste");
+		
+		menuBar.add(studentBar);
+		studentBar.add(add);
+		studentBar.add(liste);
+		
+		super.setJMenuBar(menuBar);
  
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(300, 400);
- 
-        addWindowListener(this);
- 
+        addWindowListener(this); 
         setVisible(true);
     }
  

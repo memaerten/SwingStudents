@@ -1,19 +1,19 @@
 package fr.formation.afpa.model;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-public class Student {
+public class Student implements Serializable {
 	private String nom;
 	private String prenom;
 	private String motDePasse;
@@ -88,20 +88,30 @@ public class Student {
 	}
 	
 	public void sauvegardeElements() {
-		File f = new File(nom+ ".student");
-		try {
-			f.createNewFile();
-			
-			Writer w = new FileWriter(f);
-			BufferedWriter b = new BufferedWriter(w);
-
-			b.write(this.toString() + " Moyenne : " + this.moyenne() + " " + this.notes.toString());
-			
-			b.close();
-			w.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		File f = new File("students.txt");
+		if (!f.exists()) {
+			try {
+				System.out.println("oooo");
+				f.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+			OutputStream w;
+			try {
+				w = new FileOutputStream(f);
+				ObjectOutputStream o = new ObjectOutputStream(w);
+				o.writeObject(this);
+				w.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			//b.write(this.toString() + " Moyenne : " + this.moyenne() + " " + this.notes.toString());
+
+			//b.close();
+		
 	}
 
 	
@@ -119,20 +129,20 @@ public class Student {
 		String nomStudent = s.nextLine();
 		System.out.print("Entrer prénom : ");
 		String prenomStudent = s.nextLine();
-//		Student student = new Student(nomStudent, prenomStudent, "a");
+		Student student = new Student();
 		
 		System.out.println("Combien de notes voulez vous entrer ?");
 		int nombreNotes = s.nextInt();
 		s.nextLine();
 		for (int i = 0 ; i < nombreNotes ; i++) {
 			System.out.print("Entrez la note " + i + " : " );
-			// student.notes.add(s.nextDouble());
+			 student.notes.add(s.nextDouble());
 			s.nextLine();
 		}
 		
 //		System.out.println(student.toString() + " Moyenne : " + student.moyenne());
 //		
-//		student.sauvegardeElements();
+		student.sauvegardeElements();
 		
 		s.close();
 		

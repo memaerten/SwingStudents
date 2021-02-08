@@ -1,5 +1,0 @@
-[main] DEBUG fr.formation.afpa.FrameDemo  - Test
-HH:mm:ss [main] DEBUG fr.formation.afpa.FrameDemo  - Test
-HH:mm:ss [main] DEBUG fr.formation.afpa.FrameDemo  - Test
-HH:mm:ss [main] DEBUG fr.formation.afpa.FrameDemo  - Test
-HH:mm:ss [main] DEBUG fr.formation.afpa.FrameDemo  - Test

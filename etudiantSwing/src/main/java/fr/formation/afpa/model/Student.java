@@ -66,18 +66,6 @@ public class Student {
 		return idStudent;
 	}
 
-	public void setIdStudent(int idStudent) {
-		this.idStudent = idStudent;
-	}
-
-	public static int getListStudents() {
-		return listStudents;
-	}
-
-	public static void setListStudents(int listStudents) {
-		Student.listStudents = listStudents;
-	}
-
 	public List<Double> getNotes() {
 		return notes;
 	}
@@ -117,6 +105,14 @@ public class Student {
 	}
 
 	
+	public Calendar getDateDeNaissance() {
+		return dateDeNaissance;
+	}
+
+	public void setDateDeNaissance(Calendar dateDeNaissance) {
+		this.dateDeNaissance = dateDeNaissance;
+	}
+
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		System.out.print("Entrer nom : ");

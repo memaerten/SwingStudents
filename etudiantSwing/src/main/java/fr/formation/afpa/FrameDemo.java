@@ -151,7 +151,8 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 					public void actionPerformed(ActionEvent e) {
 						System.out.println(nomTextField.getText() + " " + prenomTextField.getText() + " " + dateDeNaissance.getValue());
-						service.ajouterEtudiant(new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue()));
+						Student student = new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue());
+						service.ajouterEtudiant(student);
 					}
 				});
 				

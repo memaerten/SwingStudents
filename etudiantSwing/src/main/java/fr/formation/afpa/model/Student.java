@@ -92,13 +92,13 @@ public class Student implements Serializable {
 		return idStudent;
 	}
 
-	public List<Double> getNotes() {
-		return notes;
-	}
-
-	public void setNotes(List<Double> notes) {
-		this.notes = notes;
-	}
+//	public List<Double> getNotes() {
+//		return notes;
+//	}
+//
+//	public void setNotes(List<Double> notes) {
+//		this.notes = notes;
+//	}
 
 	public String toString() {
 		return idStudent + "Student " + nom + " " + prenom;
@@ -113,28 +113,7 @@ public class Student implements Serializable {
 		return notes/this.notes.size();
 	}
 
-	public void sauvegardeElements() {
-		File f = new File("students.txt");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		OutputStream w;
-		try {
-			w = new FileOutputStream(f);
-			ObjectOutputStream o = new ObjectOutputStream(w);
-			o.writeObject(this);
-			o.reset();
-			w.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 
-	}
 
 
 }

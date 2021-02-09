@@ -3,9 +3,12 @@ package fr.formation.afpa.dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,35 +28,53 @@ public class EtudiantDaoFile implements IEtudiantDao{
 			System.out.println("Fichier créé");
 		}
 		InputStream b;
-		try {
-			b = new FileInputStream(f);
-			ObjectInputStream o = new ObjectInputStream(b);
+	
+			if(!(f.length() == 0)) {
+				try {
+					b = new FileInputStream(f);
+					ObjectInputStream o = new ObjectInputStream(b);
 
-			while(o.read() != -1) {
-					liste.add((Student) o.readObject());
+							liste.add((Student) o.readObject());
+					
+					o.close();
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
-			o.close();
-			
-			if(liste.size() == 0) {
-				System.out.println("Taille 0");
-				
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-
-
-		System.out.println(liste.size());
 		return liste;
 	}
 
 	public void add(Student e) {
-		// TODO Auto-generated method stub
+		listStudents().add(e);
+		File f = new File("students.txt");
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException io) {
+				io.printStackTrace();
+			}
+		}
+			OutputStream w;
+			try {
+				w = new FileOutputStream(f);
+				ObjectOutputStream o = new ObjectOutputStream(w);
+			
+				o.writeObject(e);
+//				o.writeUTF(e.getNom());
+//				o.writeUTF(e.getPrenom());
+//				o.writeUTF(e.getMotDePasse());
+//				o.writeObject((Object) e.getDateDeNaissance());
+				w.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 	}
 

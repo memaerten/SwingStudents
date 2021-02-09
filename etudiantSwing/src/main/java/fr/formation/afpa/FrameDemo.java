@@ -5,15 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -78,43 +78,60 @@ public class FrameDemo extends JFrame implements WindowListener {
 			dateStudents[i] = students.get(i).getDateDeNaissance().toLocaleString();
 		}
 		Object[] studentsArray = students.toArray();
+//		JLabel labelTable = new JLabel("Liste");
+//		panel.add(labelTable);
 		JTable table = new JTable(new Object[][] {}, columns);
-		// System.out.println(new Object[][] {idStudents,nomStudents,prenomStudents,dateStudents});
 		for (int i = 0; i < studentsArray.length; i++) {
 			studentsArray[i] = new Student();
 		}
 		System.out.println(nomStudents);
 
 		panel.add(new JScrollPane(table));
-		//		table.setVisible(false);
 
 		JPanel panelAdd = new JPanel();
 		panelAdd.setLayout(new MigLayout("", "[1px][31px][77px][7px][33px][54px][][5px][2px][28px][36px]", "[14px][19px][19px][][20px][21px][][][][]"));
 
 
-		JLayeredPane layeredPane = new JLayeredPane();
 		Date today = new Date();
-		panelAdd.add(layeredPane, "cell 0 0,alignx left,aligny center");
-		JLabel labelNom = new JLabel("Nom : ");
-		panelAdd.add(labelNom, "cell 1 1,alignx left,aligny center");
-		JTextField nomTextField = new JTextField(10);
-		panelAdd.add(nomTextField, "cell 2 1 3 1,alignx left,growy");
-		JLabel labelPrenom = new JLabel("Prénom : ");
-		panelAdd.add(labelPrenom, "cell 5 1,alignx left,aligny center");
-		JTextField prenomTextField = new JTextField(10);
-		panelAdd.add(prenomTextField, "cell 6 1 4 1,alignx left,aligny top");
-		JLabel labelMotDePasse = new JLabel("Mot de passe");
-		panelAdd.add(labelMotDePasse, "cell 1 2,alignx left,aligny center");
-		JPasswordField motDePasse = new JPasswordField(10);
-		panelAdd.add(motDePasse, "cell 2 2 3 1,alignx left,aligny top");
-		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
-		panelAdd.add(labelDateDeNaissance, "cell 5 2,alignx right,aligny center");
-
 		super.getContentPane().add(panelAdd, BorderLayout.NORTH);
+		
+		JButton btnNewButton = new JButton("Parcourir...");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser(new File("."));
+				
+				if (fileChooser.showOpenDialog(null)== 
+					    JFileChooser.APPROVE_OPTION) {
+					    log.debug("Fichier sélectionné : " + fileChooser.getSelectedFile().toString());
+					}
+			}
+		});
+		
+		JLabel labelPhoto = new JLabel("Photo :");
+		panelAdd.add(labelPhoto, "cell 1 1,alignx trailing");
+		
+		JTextField photo = new JTextField();
+		panelAdd.add(photo, "cell 2 1 5 1,growx");
+		photo.setColumns(10);
+		panelAdd.add(btnNewButton, "cell 7 1");
+		JLabel labelNom = new JLabel("Nom : ");
+		panelAdd.add(labelNom, "cell 1 2,alignx right,aligny center");
+		JTextField nomTextField = new JTextField(10);
+		panelAdd.add(nomTextField, "cell 2 2,alignx left,growy");
+		JLabel labelPrenom = new JLabel("Prénom : ");
+		panelAdd.add(labelPrenom, "cell 5 2,alignx right,aligny center");
+		JTextField prenomTextField = new JTextField(10);
+		panelAdd.add(prenomTextField, "cell 7 2,alignx left,aligny top");
+		JLabel labelMotDePasse = new JLabel("Mot de passe : ");
+		panelAdd.add(labelMotDePasse, "cell 1 3,alignx left,aligny center");
+		JPasswordField motDePasse = new JPasswordField(10);
+		panelAdd.add(motDePasse, "cell 2 3,alignx left,aligny top");
+		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
+		panelAdd.add(labelDateDeNaissance, "cell 5 3,alignx right,aligny center");
 		JSpinner dateDeNaissance = new JSpinner(new SpinnerDateModel(today, null, null, Calendar.MONTH));
 		JSpinner.DateEditor editor = new JSpinner.DateEditor(dateDeNaissance, "dd/MM/yy");
 		dateDeNaissance.setEditor(editor);
-		panelAdd.add(dateDeNaissance, "cell 6 2 4 1,alignx left,aligny top");
+		panelAdd.add(dateDeNaissance, "cell 7 3,alignx left,aligny top");
 		JButton addButton = new JButton("Ajouter");
 		panelAdd.add(addButton, "cell 4 8,alignx center,aligny center");
 		JButton cancelButton = new JButton("Annuler");

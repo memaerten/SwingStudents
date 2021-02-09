@@ -11,12 +11,12 @@ public class EtudiantService implements IEtudiantService {
 	private IEtudiantDao dao = new EtudiantDaoFile();
 
 	public List<Student> listEtudiant() {
-		
 		return dao.listStudents();
 	}
 
 	public void ajouterEtudiant(Student e) {
 		dao.add(e);
+		// ajouter dans Etudiants.txt
 	}
 
 	public Student modifierEtudiant(Student e) {

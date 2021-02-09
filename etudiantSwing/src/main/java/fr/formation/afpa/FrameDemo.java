@@ -46,6 +46,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 		FrameDemo fd = new FrameDemo(); 
 
 	}
+	// afficher nouvelle JFrame avec coordonnées Student
 
 	public FrameDemo() {
 		super("Frame Demo");
@@ -93,7 +94,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 		Date today = new Date();
 		super.getContentPane().add(panelAdd, BorderLayout.NORTH);
-		
 	
 		
 		JLabel labelPhoto = new JLabel("Photo :");
@@ -118,15 +118,15 @@ public class FrameDemo extends JFrame implements WindowListener {
 		panelAdd.add(btnNewButton, "cell 7 1");
 		JLabel labelNom = new JLabel("Nom : ");
 		panelAdd.add(labelNom, "cell 1 2,alignx right,aligny center");
-		JTextField nomTextField = new JTextField(10);
+		JTextField nomTextField = new JTextField(15);
 		panelAdd.add(nomTextField, "cell 2 2,alignx left,growy");
 		JLabel labelPrenom = new JLabel("Prénom : ");
 		panelAdd.add(labelPrenom, "cell 5 2,alignx right,aligny center");
-		JTextField prenomTextField = new JTextField(10);
+		JTextField prenomTextField = new JTextField(15);
 		panelAdd.add(prenomTextField, "cell 7 2,alignx left,aligny top");
 		JLabel labelMotDePasse = new JLabel("Mot de passe : ");
 		panelAdd.add(labelMotDePasse, "cell 1 3,alignx left,aligny center");
-		JPasswordField motDePasse = new JPasswordField(10);
+		JPasswordField motDePasse = new JPasswordField(15);
 		panelAdd.add(motDePasse, "cell 2 3,alignx left,aligny top");
 		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
 		panelAdd.add(labelDateDeNaissance, "cell 5 3,alignx right,aligny center");
@@ -151,7 +151,8 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 					public void actionPerformed(ActionEvent e) {
 						System.out.println(nomTextField.getText() + " " + prenomTextField.getText() + " " + dateDeNaissance.getValue());
-						service.ajouterEtudiant(new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue()));
+						Student student = new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue());
+						service.ajouterEtudiant(student);
 					}
 				});
 				

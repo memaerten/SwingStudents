@@ -80,11 +80,10 @@ public class FrameDemo extends JFrame implements WindowListener {
 		Object[] studentsArray = students.toArray();
 //		JLabel labelTable = new JLabel("Liste");
 //		panel.add(labelTable);
-		JTable table = new JTable(new Object[][] {}, columns);
+		JTable table = new JTable(new Object[][] {{"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""}}, columns);
 		for (int i = 0; i < studentsArray.length; i++) {
 			studentsArray[i] = new Student();
 		}
-		System.out.println(nomStudents);
 
 		panel.add(new JScrollPane(table));
 
@@ -95,24 +94,27 @@ public class FrameDemo extends JFrame implements WindowListener {
 		Date today = new Date();
 		super.getContentPane().add(panelAdd, BorderLayout.NORTH);
 		
-		JButton btnNewButton = new JButton("Parcourir...");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser(new File("."));
-				
-				if (fileChooser.showOpenDialog(null)== 
-					    JFileChooser.APPROVE_OPTION) {
-					    log.debug("Fichier sélectionné : " + fileChooser.getSelectedFile().toString());
-					}
-			}
-		});
+	
 		
 		JLabel labelPhoto = new JLabel("Photo :");
 		panelAdd.add(labelPhoto, "cell 1 1,alignx trailing");
 		
 		JTextField photo = new JTextField();
+		photo.setEditable(false);
 		panelAdd.add(photo, "cell 2 1 5 1,growx");
 		photo.setColumns(10);
+		JButton btnNewButton = new JButton("Parcourir...");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser(new File(".//..//..//.."));
+				
+				if (fileChooser.showOpenDialog(null)== 
+					    JFileChooser.APPROVE_OPTION) {
+					    log.debug("Fichier sélectionné : " + fileChooser.getSelectedFile().toString());
+					    photo.setText(fileChooser.getSelectedFile().toString());
+					}
+			}
+		});
 		panelAdd.add(btnNewButton, "cell 7 1");
 		JLabel labelNom = new JLabel("Nom : ");
 		panelAdd.add(labelNom, "cell 1 2,alignx right,aligny center");

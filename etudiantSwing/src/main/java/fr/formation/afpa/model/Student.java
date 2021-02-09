@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 
 public class Student implements Serializable {
 	/**
@@ -45,17 +44,6 @@ public class Student implements Serializable {
 		this.motDePasse = motDePasse;
 
 	}
-
-	//	public Student(String nom, String prenom, String motDePasse, int jourDeNaissance, int moisDeNaissance, int anneeDeNaissance) {
-	//		listStudents++;
-	//		this.idStudent = listStudents;
-	//		this.nom = nom;
-	//		this.prenom = prenom;
-	//		this.motDePasse = motDePasse;
-	//		this.notes = new ArrayList<Double>();
-	//		dateDeNaissance = new GregorianCalendar();
-	//		dateDeNaissance.set(jourDeNaissance, moisDeNaissance, anneeDeNaissance);
-	//	}
 
 	public Student(String nom, String prenom, String motDePasse, Date dateDeNaissance) {
 		listStudents++;
@@ -146,35 +134,7 @@ public class Student implements Serializable {
 			e1.printStackTrace();
 		}
 
-		//b.write(this.toString() + " Moyenne : " + this.moyenne() + " " + this.notes.toString());
-
-		//b.close();
-
 	}
 
 
-//	public static void main(String[] args) {
-//		Scanner s = new Scanner(System.in);
-//		System.out.print("Entrer nom : ");
-//		String nomStudent = s.nextLine();
-//		System.out.print("Entrer prénom : ");
-//		String prenomStudent = s.nextLine();
-//		Student student = new Student();
-//
-//		System.out.println("Combien de notes voulez vous entrer ?");
-//		int nombreNotes = s.nextInt();
-//		s.nextLine();
-//		for (int i = 0 ; i < nombreNotes ; i++) {
-//			System.out.print("Entrez la note " + i + " : " );
-//			student.notes.add(s.nextDouble());
-//			s.nextLine();
-//		}
-//
-//		//		System.out.println(student.toString() + " Moyenne : " + student.moyenne());
-//		//		
-//		student.sauvegardeElements();
-//
-//		s.close();
-//
-//	}
 }

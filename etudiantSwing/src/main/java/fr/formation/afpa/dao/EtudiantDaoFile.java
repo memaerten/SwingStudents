@@ -28,31 +28,28 @@ public class EtudiantDaoFile implements IEtudiantDao{
 			System.out.println("Fichier créé");
 		}
 		InputStream b;
-	
-			if(!(f.length() == 0)) {
-				try {
-					b = new FileInputStream(f);
-					ObjectInputStream o = new ObjectInputStream(b);
 
-							liste.add((Student) o.readObject());
-					
-					o.close();
+		if(!(f.length() == 0)) {
+			try {
+				b = new FileInputStream(f);
+				ObjectInputStream o = new ObjectInputStream(b);
+				liste = (List<Student>) o.readObject();
+				o.close();
 
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
+		}
 		return liste;
 	}
 
 	public void add(Student e) {
-		listStudents().add(e);
+		List <Student> liste = listStudents();
+		liste.add(e);
 		File f = new File("students.txt");
 		if (!f.exists()) {
 			try {
@@ -61,20 +58,16 @@ public class EtudiantDaoFile implements IEtudiantDao{
 				io.printStackTrace();
 			}
 		}
-			OutputStream w;
-			try {
-				w = new FileOutputStream(f,true);
-				ObjectOutputStream o = new ObjectOutputStream(w);
-			
-				o.writeObject(e);
-//				o.writeUTF(e.getNom());
-//				o.writeUTF(e.getPrenom());
-//				o.writeUTF(e.getMotDePasse());
-//				o.writeObject((Object) e.getDateDeNaissance());
-				w.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		OutputStream w;
+		try {
+			w = new FileOutputStream(f);
+			ObjectOutputStream o = new ObjectOutputStream(w);
+
+			o.writeObject(liste);
+			w.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 	}
 

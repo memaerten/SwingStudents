@@ -33,6 +33,11 @@ public class EtudiantDaoFile implements IEtudiantDao{
 					liste.add((Student) o.readObject());
 			}
 			o.close();
+			
+			if(liste.size() == 0) {
+				System.out.println("Taille 0");
+				
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

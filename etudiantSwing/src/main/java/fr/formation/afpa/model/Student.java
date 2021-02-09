@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -20,21 +21,31 @@ public class Student implements Serializable {
 	private int idStudent;
 	private static int listStudents = 0;
 	private List <Double> notes;
-	private Calendar dateDeNaissance;
+	private Date dateDeNaissance;
 
 	public Student() {
 
 	}
 
-	public Student(String nom, String prenom, String motDePasse, int jourDeNaissance, int moisDeNaissance, int anneeDeNaissance) {
+//	public Student(String nom, String prenom, String motDePasse, int jourDeNaissance, int moisDeNaissance, int anneeDeNaissance) {
+//		listStudents++;
+//		this.idStudent = listStudents;
+//		this.nom = nom;
+//		this.prenom = prenom;
+//		this.motDePasse = motDePasse;
+//		this.notes = new ArrayList<Double>();
+//		dateDeNaissance = new GregorianCalendar();
+//		dateDeNaissance.set(jourDeNaissance, moisDeNaissance, anneeDeNaissance);
+//	}
+
+	public Student(String nom, String prenom, String motDePasse, Date dateDeNaissance) {
 		listStudents++;
 		this.idStudent = listStudents;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.motDePasse = motDePasse;
 		this.notes = new ArrayList<Double>();
-		dateDeNaissance = new GregorianCalendar();
-		dateDeNaissance.set(jourDeNaissance, moisDeNaissance, anneeDeNaissance);
+		this.dateDeNaissance = dateDeNaissance;
 	}
 
 	
@@ -75,7 +86,7 @@ public class Student implements Serializable {
 	}
 
 	public String toString() {
-		return "Student " + nom + " " + prenom;
+		return idStudent + "Student " + nom + " " + prenom;
 	}
 
 	public double moyenne() {
@@ -114,14 +125,6 @@ public class Student implements Serializable {
 		
 	}
 
-	
-	public Calendar getDateDeNaissance() {
-		return dateDeNaissance;
-	}
-
-	public void setDateDeNaissance(Calendar dateDeNaissance) {
-		this.dateDeNaissance = dateDeNaissance;
-	}
 
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);

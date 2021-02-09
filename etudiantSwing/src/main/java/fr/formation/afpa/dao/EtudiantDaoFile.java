@@ -63,7 +63,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 		}
 			OutputStream w;
 			try {
-				w = new FileOutputStream(f);
+				w = new FileOutputStream(f,true);
 				ObjectOutputStream o = new ObjectOutputStream(w);
 			
 				o.writeObject(e);

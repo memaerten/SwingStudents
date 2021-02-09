@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -44,7 +45,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 		// log.debug("Test");
 		FrameDemo fd = new FrameDemo(); 
 
-
 	}
 
 	public FrameDemo() {
@@ -65,10 +65,25 @@ public class FrameDemo extends JFrame implements WindowListener {
 		studentBar.add(liste);
 		studentBar.add(modification);
 
-		String[] columns = {"id", "Nom", "Prénom", "Date de naissance", "Notes"};
+		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
 		List<Student> students = service.listEtudiant();
-		System.out.println(students.size());
-		JTable table = new JTable(new Object[][] {{"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""}}, columns);
+		String[] idStudents = new String[students.size()];
+		String[] nomStudents = new String[students.size()];
+		String[] prenomStudents = new String[students.size()];
+		String[] dateStudents = new String[students.size()];
+		for (int i = 0; i < students.size() ; i++) {
+			idStudents[i] = String.valueOf(students.get(i).getIdStudent());
+			nomStudents[i] = students.get(i).getNom();
+			prenomStudents[i] = students.get(i).getPrenom();
+			dateStudents[i] = students.get(i).getDateDeNaissance().toLocaleString();
+		}
+		Object[] studentsArray = students.toArray();
+		JTable table = new JTable(new Object[][] {}, columns);
+		// System.out.println(new Object[][] {idStudents,nomStudents,prenomStudents,dateStudents});
+		for (int i = 0; i < studentsArray.length; i++) {
+			studentsArray[i] = new Student();
+		}
+		System.out.println(nomStudents);
 
 		panel.add(new JScrollPane(table));
 		//		table.setVisible(false);
@@ -120,6 +135,17 @@ public class FrameDemo extends JFrame implements WindowListener {
 						service.ajouterEtudiant(new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue()));
 					}
 				});
+				
+				cancelButton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						FrameDemo.super.getContentPane().removeAll();
+						FrameDemo.super.add(panel);
+						repaint();
+						System.out.println(service.listEtudiant());
+						
+					}
+				});
 
 			}
 
@@ -157,30 +183,30 @@ public class FrameDemo extends JFrame implements WindowListener {
 	}
 
 	public void windowActivated(WindowEvent event) {
-		System.out.println("The window has been activated");
+		log.debug("The window has been activated");
 	}
 
 	public void windowClosed(WindowEvent event) {
-		System.out.println("The window has been closed");
+		log.debug("The window has been closed");
 	}
 
 	public void windowClosing(WindowEvent event) {
-		System.out.println("About to close the window");
+		log.debug("About to close the window");
 	}
 
 	public void windowDeactivated(WindowEvent event) {
-		System.out.println("The window has been deactivated");
+		log.debug("The window has been deactivated");
 	}
 
 	public void windowDeiconified(WindowEvent event) {
-		System.out.println("The window has been restored");
+		log.debug("The window has been restored");
 	}
 
 	public void windowIconified(WindowEvent event) {
-		System.out.println("The window has been minimized");
+		log.debug("The window has been minimized");
 	}
 
 	public void windowOpened(WindowEvent event) {
-		System.out.println("The window has been opened");
+		log.debug("The window has been opened");
 	}
 }

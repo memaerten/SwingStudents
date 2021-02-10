@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -31,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -159,19 +159,31 @@ public class FrameDemo extends JFrame implements WindowListener {
 		studentBar.add(add);
 		studentBar.add(liste);
 
-		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
+		
+		
+	
 		List<Student> students = service.listEtudiant();
-		String[] idStudents = new String[students.size()];
-		String[] nomStudents = new String[students.size()];
-		String[] prenomStudents = new String[students.size()];
-		String[] dateStudents = new String[students.size()];
-		Object[] tableStudents = new Student[5];
+		JTable table = new JTable();
+		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
+		table.setModel(new DefaultTableModel(new Object[][] {			
+		}, columns));
+		
+		JScrollPane scroll = new JScrollPane(table);
+		
+		DefaultTableModel modele = (DefaultTableModel) table.getModel();
+		modele.fireTableDataChanged();
+//		String[] idStudents = new String[students.size()];
+//		String[] nomStudents = new String[students.size()];
+//		String[] prenomStudents = new String[students.size()];
+//		String[] dateStudents = new String[students.size()];
+		Object[] tableStudents = new Object[4];
 		for (int i = 0; i < students.size() ; i++) {
-			Student st = students.get(i);
-			//tableStudents[0] = students.get(i).getIdStudent();
-			nomStudents[i] = students.get(i).getNom();
-			prenomStudents[i] = students.get(i).getPrenom();
-			dateStudents[i] = students.get(i).getDateDeNaissance().toLocaleString();
+			Object student = students.get(i);
+			tableStudents[0] = ((Student) student).getIdStudent();
+			tableStudents[1] = ((Student) student).getNom();
+			tableStudents[2] = ((Student) student).getPrenom();
+			tableStudents[3] = ((Student) student).getDateDeNaissance().toLocaleString();
+			modele.addRow(tableStudents);
 			
 		}
 		
@@ -179,7 +191,10 @@ public class FrameDemo extends JFrame implements WindowListener {
 		Object[] studentsArray = students.toArray();
 		//		JLabel labelTable = new JLabel("Liste");
 		//		panel.add(labelTable);
-		JTable table = new JTable(new Object[][] {tableStudents}, columns);
+		// table = new JTable(new Object[][] {tableStudents}, columns);
+		
+		
+		panel.add(scroll);
 
 		table.addMouseListener(new MouseListener() {
 

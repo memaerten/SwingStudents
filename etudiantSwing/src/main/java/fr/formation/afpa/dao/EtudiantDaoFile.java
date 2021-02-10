@@ -36,6 +36,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 				liste = (List<Student>) o.readObject();
 				o.close();
 
+				b.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -44,6 +45,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 				e.printStackTrace();
 			}
 		}
+	
 		return liste;
 	}
 
@@ -64,6 +66,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 			ObjectOutputStream o = new ObjectOutputStream(w);
 
 			o.writeObject(liste);
+			o.close();
 			w.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();

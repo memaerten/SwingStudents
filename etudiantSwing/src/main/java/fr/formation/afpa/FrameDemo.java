@@ -1,6 +1,9 @@
 package fr.formation.afpa;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -13,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -49,6 +53,10 @@ import net.miginfocom.swing.MigLayout;
  */
 public class FrameDemo extends JFrame implements WindowListener {
 	public static final Log log = LogFactory.getLog(FrameDemo.class);
+	EtudiantService service = new EtudiantService();
+	JTable table;
+	DefaultTableModel modele;
+	List<Student> students;
 
 	public static void main(String[] args) {
 		// log.debug("Test");
@@ -57,15 +65,31 @@ public class FrameDemo extends JFrame implements WindowListener {
 	}
 	// afficher nouvelle JFrame avec coordonnées Student
 
-	public void afficher(Student e) {
-		log.debug("Affichage de " + e.toString());
+	public void ajouter() {
+		
+	}
+	
+	public void afficher(Student studentAffiche) {
+		log.debug("Affichage de " + studentAffiche.toString());
 		JDialog frame = new JDialog(this);
 		frame.setBounds(100, 100, 450, 300);
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 		JPanel panelAdd = new JPanel();
-		Date today = new Date();
+		JPanel photo = new JPanel() {
+			 public void paintComponent(Graphics g)
+			    {
+			        Image img = new ImageIcon(studentAffiche.getPhoto()).getImage();
+			        Dimension size = new Dimension(img.getWidth(null)/10, img.getHeight(null)/10);
+			        setPreferredSize(size);
+			        setMinimumSize(size);
+			        setMaximumSize(size);
+			        setSize(size);
+			        setLayout(null);
+			        g.drawImage(img, 0, 0, null);
+			    }
+		};
 		panelAdd.setLayout(new MigLayout("", "[1px][31px][77px,grow][7px][33px][54px][][][5px][2px][28px][36px]", "[14px][19px][19px][][20px][21px][][][][][]"));
 
 
@@ -78,7 +102,16 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 		JLabel label = new JLabel("Photo :");
 		panelAdd.add(label, "cell 1 1,alignx trailing");
-
+		 UtilDateModel model = new UtilDateModel();
+	        Properties p = new Properties();
+	        p.put("text.today", "Today");
+	        p.put("text.month", "Month");
+	        p.put("text.year", "Year");
+	        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+	        datePanel.setBounds(115, 272, 255, 35);
+	        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+	        datePicker.setBounds(115, 272, 255, 30);
+	        
 		JLabel labelNom = new JLabel("Nom : ");
 		panelAdd.add(labelNom, "cell 1 5,alignx left,aligny center");
 		JTextField nomTextField = new JTextField(10);
@@ -94,36 +127,49 @@ public class FrameDemo extends JFrame implements WindowListener {
 		panelAdd.add(motDePasse, "cell 2 6 3 1,alignx left,aligny top");
 		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
 		panelAdd.add(labelDateDeNaissance, "cell 5 6,alignx right,aligny center");
-		JSpinner dateDeNaissance = new JSpinner(new SpinnerDateModel(today, null, null, Calendar.MONTH));
-		JSpinner.DateEditor editor = new JSpinner.DateEditor(dateDeNaissance, "dd/MM/yy");
-		dateDeNaissance.setEditor(editor);
-		panelAdd.add(dateDeNaissance, "cell 7 6,alignx left,aligny top");
+		panelAdd.add(datePicker, "cell 7 3,alignx left,aligny top");
 		
 		nomTextField.setEditable(false);
 		prenomTextField.setEditable(false);
 		motDePasse.setEditable(false);
-		dateDeNaissance.setEnabled(false);
+		datePicker.setEnabled(false);
 
-		nomTextField.setText(e.getNom());
-		prenomTextField.setText(e.getPrenom());
-		motDePasse.setText(e.getMotDePasse());
-		dateDeNaissance.setValue(e.getDateDeNaissance());
+		nomTextField.setText(studentAffiche.getNom());
+		prenomTextField.setText(studentAffiche.getPrenom());
+		motDePasse.setText(studentAffiche.getMotDePasse());
+		datePicker.getModel().setDate(studentAffiche.getDateDeNaissance().getDay(), studentAffiche.getDateDeNaissance().getMonth(), studentAffiche.getDateDeNaissance().getYear());
 
 		JButton modifierButton = new JButton("Modifier");
 		panelAdd.add(modifierButton, "cell 4 9");
 		JButton cancelButton = new JButton("Annuler");
 		panelAdd.add(cancelButton, "cell 5 9,alignx center,aligny top");
+		frame.add(photo);
 		frame.setVisible(true);
 		
 		modifierButton.addActionListener(new ActionListener() {
-			
+			boolean modeEdition = false;
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				log.debug("Modifcation de " + e.toString());
-				nomTextField.setEditable(true);
-				prenomTextField.setEditable(true);
-				motDePasse.setEditable(true);
-				dateDeNaissance.setEnabled(true);
+				Student modification = studentAffiche;
+				if (modeEdition == false) {
+					modeEdition = true;
+					log.debug("Modification de " + studentAffiche.toString());
+					modifierButton.setText("Enregistrer");
+					nomTextField.setEditable(true);
+					prenomTextField.setEditable(true);
+					motDePasse.setEditable(true);
+					datePicker.setEnabled(true);
+				} else {
+					studentAffiche.setNom(nomTextField.getText());
+					studentAffiche.setPrenom(prenomTextField.getText());
+					studentAffiche.setMotDePasse(motDePasse.getText());
+					studentAffiche.setDateDeNaissance((Date) datePicker.getModel().getValue());
+					System.out.println(modification.getIdStudent());
+					System.out.println(nomTextField.getText() + " " + prenomTextField.getText() + " " + motDePasse.getText()+ " " + (Date) datePicker.getModel().getValue());
+					service.modifierEtudiant(studentAffiche);
+					modele.fireTableDataChanged();
+					frame.dispose();
+				}
 				
 			}
 		});
@@ -146,23 +192,20 @@ public class FrameDemo extends JFrame implements WindowListener {
 	public FrameDemo() {
 		super("Frame Demo");
 
-		EtudiantService service = new EtudiantService();
-
 		JMenuBar menuBar = new JMenuBar();
 		JMenu studentBar = new JMenu("Etudiant");
 		JMenuItem add = new JMenuItem("Ajouter");
 		JMenuItem liste = new JMenuItem("Liste");
 
-		JPanel panel = new JPanel();
 
 		menuBar.add(studentBar);
 		studentBar.add(add);
 		studentBar.add(liste);
 
-		
-		
+
+		JPanel panel = new JPanel();
 	
-		List<Student> students = service.listEtudiant();
+		students = service.listEtudiant();
 		JTable table = new JTable();
 		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
 		table.setModel(new DefaultTableModel(new Object[][] {			
@@ -170,12 +213,8 @@ public class FrameDemo extends JFrame implements WindowListener {
 		
 		JScrollPane scroll = new JScrollPane(table);
 		
-		DefaultTableModel modele = (DefaultTableModel) table.getModel();
-		modele.fireTableDataChanged();
-//		String[] idStudents = new String[students.size()];
-//		String[] nomStudents = new String[students.size()];
-//		String[] prenomStudents = new String[students.size()];
-//		String[] dateStudents = new String[students.size()];
+		modele = (DefaultTableModel) table.getModel();
+
 		Object[] tableStudents = new Object[4];
 		for (int i = 0; i < students.size() ; i++) {
 			Object student = students.get(i);
@@ -271,7 +310,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 	        datePanel.setBounds(115, 272, 255, 35);
 	        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 	        datePicker.setBounds(115, 272, 255, 30);
-	        panelAdd.add(datePicker);
 	        
 		panelAdd.add(btnNewButton, "cell 7 1");
 		JLabel labelNom = new JLabel("Nom : ");
@@ -288,9 +326,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 		panelAdd.add(motDePasse, "cell 2 3,alignx left,aligny top");
 		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
 		panelAdd.add(labelDateDeNaissance, "cell 5 3,alignx right,aligny center");
-		JSpinner dateDeNaissance = new JSpinner(new SpinnerDateModel(today, null, null, Calendar.MONTH));
-		JSpinner.DateEditor editor = new JSpinner.DateEditor(dateDeNaissance, "dd/MM/yy");
-		dateDeNaissance.setEditor(editor);
 		panelAdd.add(datePicker, "cell 7 3,alignx left,aligny top");
 		JButton addButton = new JButton("Ajouter");
 		panelAdd.add(addButton, "cell 4 8,alignx center,aligny center");
@@ -308,8 +343,9 @@ public class FrameDemo extends JFrame implements WindowListener {
 				addButton.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
-						Student student = new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) dateDeNaissance.getValue());
+						Student student = new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) datePicker.getModel().getValue(), photo.getText());
 						System.out.println(student);
+						modele.fireTableDataChanged();
 						service.ajouterEtudiant(student);
 					}
 				});
@@ -320,6 +356,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 						FrameDemo.super.getContentPane().removeAll();
 						FrameDemo.super.add(panel);
 						repaint();
+						
 						System.out.println(service.listEtudiant());
 
 					}
@@ -333,8 +370,10 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 			public void actionPerformed(ActionEvent e) {
 				FrameDemo.super.getContentPane().removeAll();
+				students = service.listEtudiant();
 				FrameDemo.super.add(panel);
 				repaint();
+				modele.fireTableDataChanged();
 				System.out.println(service.listEtudiant());
 
 			}
@@ -348,6 +387,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(600, 400);
+		setLocationRelativeTo(null);
 		addWindowListener(this); 
 		setVisible(true);
 	}
@@ -379,4 +419,5 @@ public class FrameDemo extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent event) {
 		log.debug("The window has been opened");
 	}
+	
 }

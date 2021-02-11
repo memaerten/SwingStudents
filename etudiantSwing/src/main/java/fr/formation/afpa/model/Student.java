@@ -1,10 +1,7 @@
 package fr.formation.afpa.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class Student implements Serializable {
 	/**
@@ -16,8 +13,17 @@ public class Student implements Serializable {
 	private String motDePasse;
 	private int idStudent;
 	private static int listStudents = 0;
-	private List <Double> notes;
+	// private List <Double> notes;
 	private Date dateDeNaissance;
+	private String photo;
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
 	public Student() {
 		listStudents++;
@@ -40,14 +46,15 @@ public class Student implements Serializable {
 
 	}
 
-	public Student(String nom, String prenom, String motDePasse, Date dateDeNaissance) {
+	public Student(String nom, String prenom, String motDePasse, Date dateDeNaissance, String photo) {
 		listStudents++;
 		this.idStudent = listStudents;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.motDePasse = motDePasse;
-		this.notes = new ArrayList<Double>();
+	//	this.notes = new ArrayList<Double>();
 		this.dateDeNaissance = dateDeNaissance;
+		this.photo = photo;
 	}
 
 
@@ -96,16 +103,20 @@ public class Student implements Serializable {
 //	}
 
 	public String toString() {
-		return idStudent + "Student " + nom + " " + prenom;
+		return idStudent + " Student " + nom + " " + prenom;
 	}
 
-	public double moyenne() {
-		Iterator<Double> i = this.notes.iterator();
-		double notes = 0;
-		while (i.hasNext()) {
-			notes = notes + i.next();
-		}
-		return notes/this.notes.size();
+//	public double moyenne() {
+//		Iterator<Double> i = this.notes.iterator();
+//		double notes = 0;
+//		while (i.hasNext()) {
+//			notes = notes + i.next();
+//		}
+//		return notes/this.notes.size();
+//	}
+
+	public static int getListStudents() {
+		return listStudents;
 	}
 
 

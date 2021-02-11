@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.formation.afpa.model.Student;
+import jdk.internal.org.jline.utils.Log;
 
 public class EtudiantDaoFile implements IEtudiantDao{
 	List<Student> liste;
@@ -79,6 +80,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println("Liste " + liste);
 
 	}
 

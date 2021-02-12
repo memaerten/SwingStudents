@@ -13,6 +13,10 @@ public class Student implements Serializable {
 	private String motDePasse;
 	private int idStudent;
 	private static int listStudents = 0;
+	public static void setListStudents(int listStudents) {
+		Student.listStudents = listStudents;
+	}
+
 	// private List <Double> notes;
 	private Date dateDeNaissance;
 	private String photo;

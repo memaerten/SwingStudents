@@ -289,7 +289,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 					btnNewButton.setVisible(false);
 
 					service.modifierEtudiant(studentAffiche);
-					//service.ajouterEtudiant(service.modifierEtudiant(studentAffiche));
 					refresh();
 					frame.dispose();
 				}
@@ -304,18 +303,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 		imageP.setIcon(image);
 		infoStudent.add(panelAdd, "cell 0 1 10 1,grow");		
 
-
-		//
-		//		nomTextField.setText(studentAffiche.getNom());
-		//		prenomTextField.setText(studentAffiche.getPrenom());
-		//		motDePasse.setText(studentAffiche.getMotDePasse());
-		//		datePicker.getModel().setDate(studentAffiche.getDateDeNaissance().getDay(), studentAffiche.getDateDeNaissance().getMonth(), studentAffiche.getDateDeNaissance().getYear());
-		//
-		//		JButton modifierButton = new JButton("Modifier");
-		//		panelAdd.add(modifierButton, "cell 4 9");
-		//		JButton cancelButton = new JButton("Annuler");
-		//		panelAdd.add(cancelButton, "cell 5 9,alignx center,aligny top");
-		//		frame.add(photo);
 		frame.setVisible(true);
 
 		cancelButton.addActionListener(new ActionListener() {
@@ -340,8 +327,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 		JMenu studentBar = new JMenu("Etudiant");
 		JMenuItem add = new JMenuItem("Ajouter");
 		JMenuItem liste = new JMenuItem("Liste");
-
-		students = new ArrayList<Student>();
 
 		menuBar.add(studentBar);
 		studentBar.add(add);
@@ -415,13 +400,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 	public void refresh() {
 		students = service.listEtudiant();
-
-		//revalidate vider l'image 
-		//		JLabel labelTable = new JLabel("Liste");
-		//		panel.add(labelTable);
-		// table = new JTable(new Object[][] {tableStudents}, columns);
-
-
+		
 
 		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
 		DefaultTableModel modele = new DefaultTableModel();
@@ -438,10 +417,12 @@ public class FrameDemo extends JFrame implements WindowListener {
 				modele.fireTableRowsUpdated(0, students.size());
 
 			}
+			Student.setListStudents(students.size());
 		}
 		table.setModel(modele);
 		FrameDemo.log.debug(students);
 		panel.setVisible(true);
+		
 
 	}
 

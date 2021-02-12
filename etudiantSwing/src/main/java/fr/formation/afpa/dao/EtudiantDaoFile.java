@@ -47,7 +47,6 @@ public class EtudiantDaoFile implements IEtudiantDao{
 				e.printStackTrace();
 			}
 		}
-
 		return liste;
 	}
 

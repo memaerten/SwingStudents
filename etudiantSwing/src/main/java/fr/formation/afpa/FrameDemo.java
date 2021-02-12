@@ -417,11 +417,12 @@ public class FrameDemo extends JFrame implements WindowListener {
 				modele.fireTableRowsUpdated(0, students.size());
 
 			}
+			Student.setListStudents(students.size());
 		}
 		table.setModel(modele);
 		FrameDemo.log.debug(students);
 		panel.setVisible(true);
-		Student.setListStudents(students.size());
+		
 
 	}
 

@@ -2,8 +2,7 @@ package fr.formation.afpa;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +13,6 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -27,17 +25,14 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -58,12 +53,13 @@ import net.miginfocom.swing.MigLayout;
  */
 public class FrameDemo extends JFrame implements WindowListener {
 	public static final Log log = LogFactory.getLog(FrameDemo.class);
-	EtudiantService service = new EtudiantService();
-	JTable table;
-	DefaultTableModel modele;
-	List<Student> students;
-	BufferedImage img;
-	Image photoStudent;
+	private EtudiantService service = new EtudiantService();
+	private JTable table;
+	private DefaultTableModel modele;
+	private List<Student> students;
+	private BufferedImage img;
+	private Image photoStudent;
+	private JPanel panel;
 
 	public static void main(String[] args) {
 		// log.debug("Test");
@@ -73,6 +69,81 @@ public class FrameDemo extends JFrame implements WindowListener {
 	// afficher nouvelle JFrame avec coordonnées Student
 
 	public void ajouter() {
+		JDialog addStudent = new JDialog(this);
+		addStudent.setLayout(new MigLayout("", "[1px][31px][77px][7px][33px][54px][][5px][2px][28px][36px]", "[14px][19px][19px][][20px][21px][][][][]"));
+
+
+		JLabel labelPhoto = new JLabel("Photo :");
+		addStudent.add(labelPhoto, "cell 1 1,alignx trailing");
+
+		JTextField photo = new JTextField();
+		photo.setEditable(false);
+		addStudent.add(photo, "cell 2 1 5 1,growx");
+		photo.setColumns(10);
+		JButton btnNewButton = new JButton("Parcourir...");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser(new File(".//..//..//.."));
+
+				if (fileChooser.showOpenDialog(null)== 
+						JFileChooser.APPROVE_OPTION) {
+					log.debug("Fichier sélectionné : " + fileChooser.getSelectedFile().toString());
+					photo.setText(fileChooser.getSelectedFile().toString());
+				}
+			}
+		});
+		UtilDateModel model = new UtilDateModel();
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+		datePanel.setBounds(115, 272, 255, 35);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		datePicker.setBounds(115, 272, 255, 30);
+
+		addStudent.add(btnNewButton, "cell 7 1");
+		JLabel labelNom = new JLabel("Nom : ");
+		addStudent.add(labelNom, "cell 1 2,alignx right,aligny center");
+		JTextField nomTextField = new JTextField(15);
+		addStudent.add(nomTextField, "cell 2 2,alignx left,growy");
+		JLabel labelPrenom = new JLabel("Prénom : ");
+		addStudent.add(labelPrenom, "cell 5 2,alignx right,aligny center");
+		JTextField prenomTextField = new JTextField(15);
+		addStudent.add(prenomTextField, "cell 7 2,alignx left,aligny top");
+		JLabel labelMotDePasse = new JLabel("Mot de passe : ");
+		addStudent.add(labelMotDePasse, "cell 1 3,alignx left,aligny center");
+		JPasswordField motDePasse = new JPasswordField(15);
+		addStudent.add(motDePasse, "cell 2 3,alignx left,aligny top");
+		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
+		addStudent.add(labelDateDeNaissance, "cell 5 3,alignx right,aligny center");
+		addStudent.add(datePicker, "cell 7 3,alignx left,aligny top");
+		JButton addButton = new JButton("Ajouter");
+		addStudent.add(addButton, "cell 4 8,alignx center,aligny center");
+		JButton cancelButton = new JButton("Annuler");
+		addStudent.add(cancelButton, "cell 5 8,alignx center,aligny top");
+
+		addStudent.setVisible(false);
+
+		addButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				service.ajouterEtudiant(new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) datePicker.getModel().getValue(), photo.getText()));
+				refresh();
+				addStudent.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				addStudent.dispose();
+				refresh();
+
+			}
+		});
+		addStudent.setVisible(true);
+		addStudent.setSize(500, 500);
 
 	}
 
@@ -80,8 +151,6 @@ public class FrameDemo extends JFrame implements WindowListener {
 		log.debug("Affichage de " + studentAffiche.toString());
 		JDialog frame = new JDialog(this);
 		frame.setBounds(100, 100, 650, 500);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
 		img = null;
 		try {
@@ -170,7 +239,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 		nomTextField.setText(studentAffiche.getNom());
 		prenomTextField.setText(studentAffiche.getPrenom());
 		motDePasse.setText(studentAffiche.getMotDePasse());
-		datePicker.getModel().setDate(studentAffiche.getDateDeNaissance().getDay(), studentAffiche.getDateDeNaissance().getMonth(), studentAffiche.getDateDeNaissance().getYear());
+		datePicker.setVisible(false);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -201,6 +270,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 					prenomTextField.setEditable(true);
 					motDePasse.setEditable(true);
 					datePicker.setEnabled(true);
+					datePicker.setVisible(true);
 
 					photoTextField.setText(studentAffiche.getPhoto());
 					photoTextField.setVisible(true);
@@ -217,8 +287,9 @@ public class FrameDemo extends JFrame implements WindowListener {
 					photoTextField.setVisible(false);
 					btnNewButton.setVisible(false);
 
+					service.modifierEtudiant(studentAffiche);
 					//service.ajouterEtudiant(service.modifierEtudiant(studentAffiche));
-					modele.fireTableDataChanged();
+					refresh();
 					frame.dispose();
 				}
 
@@ -257,12 +328,12 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 	}
 
-	public void liste() {
-
-	}
 
 	public FrameDemo() {
 		super("Frame Demo");
+		panel = new JPanel(new GridLayout());
+		
+		table = new JTable();
 
 		JMenuBar menuBar = new JMenuBar();
 		JMenu studentBar = new JMenu("Etudiant");
@@ -274,24 +345,30 @@ public class FrameDemo extends JFrame implements WindowListener {
 		studentBar.add(add);
 		studentBar.add(liste);
 
-
-		JPanel panel = new JPanel();
-
-
-		table = new JTable();
-
 		refresh();
-		JScrollPane scroll = new JScrollPane(table);
-
-		//revalidate vider l'image 
-		Object[] studentsArray = students.toArray();
-		//		JLabel labelTable = new JLabel("Liste");
-		//		panel.add(labelTable);
-		// table = new JTable(new Object[][] {tableStudents}, columns);
 
 
-		panel.add(scroll);
+		add.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				ajouter();
+			}
+			});
+
+		liste.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				students = service.listEtudiant();
+				repaint();
+				refresh();
+
+			}
+
+		});
+
+
+		super.setJMenuBar(menuBar);
+		
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -323,119 +400,9 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 			}
 		});
-		for (int i = 0; i < studentsArray.length; i++) {
-			studentsArray[i] = new Student();
-		}
-
-		panel.add(new JScrollPane(table));
-
-		JPanel panelAdd = new JPanel();
-		panelAdd.setLayout(new MigLayout("", "[1px][31px][77px][7px][33px][54px][][5px][2px][28px][36px]", "[14px][19px][19px][][20px][21px][][][][]"));
-
-
-		Date today = new Date();
-		super.getContentPane().add(panelAdd, BorderLayout.NORTH);
-
-
-		JLabel labelPhoto = new JLabel("Photo :");
-		panelAdd.add(labelPhoto, "cell 1 1,alignx trailing");
-
-		JTextField photo = new JTextField();
-		photo.setEditable(false);
-		panelAdd.add(photo, "cell 2 1 5 1,growx");
-		photo.setColumns(10);
-		JButton btnNewButton = new JButton("Parcourir...");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser(new File(".//..//..//.."));
-
-				if (fileChooser.showOpenDialog(null)== 
-						JFileChooser.APPROVE_OPTION) {
-					log.debug("Fichier sélectionné : " + fileChooser.getSelectedFile().toString());
-					photo.setText(fileChooser.getSelectedFile().toString());
-				}
-			}
-		});
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		datePanel.setBounds(115, 272, 255, 35);
-		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		datePicker.setBounds(115, 272, 255, 30);
-
-		panelAdd.add(btnNewButton, "cell 7 1");
-		JLabel labelNom = new JLabel("Nom : ");
-		panelAdd.add(labelNom, "cell 1 2,alignx right,aligny center");
-		JTextField nomTextField = new JTextField(15);
-		panelAdd.add(nomTextField, "cell 2 2,alignx left,growy");
-		JLabel labelPrenom = new JLabel("Prénom : ");
-		panelAdd.add(labelPrenom, "cell 5 2,alignx right,aligny center");
-		JTextField prenomTextField = new JTextField(15);
-		panelAdd.add(prenomTextField, "cell 7 2,alignx left,aligny top");
-		JLabel labelMotDePasse = new JLabel("Mot de passe : ");
-		panelAdd.add(labelMotDePasse, "cell 1 3,alignx left,aligny center");
-		JPasswordField motDePasse = new JPasswordField(15);
-		panelAdd.add(motDePasse, "cell 2 3,alignx left,aligny top");
-		JLabel labelDateDeNaissance = new JLabel("Date de naissance : ");
-		panelAdd.add(labelDateDeNaissance, "cell 5 3,alignx right,aligny center");
-		panelAdd.add(datePicker, "cell 7 3,alignx left,aligny top");
-		JButton addButton = new JButton("Ajouter");
-		panelAdd.add(addButton, "cell 4 8,alignx center,aligny center");
-		JButton cancelButton = new JButton("Annuler");
-		panelAdd.add(cancelButton, "cell 5 8,alignx center,aligny top");
-
-		panelAdd.setVisible(false);
-		add.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				FrameDemo.super.getContentPane().removeAll();
-				FrameDemo.super.add(panelAdd);
-				repaint();
-				panelAdd.setVisible(true);
-				addButton.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						service.ajouterEtudiant(new Student(nomTextField.getText(),prenomTextField.getText(),motDePasse.getText(),(Date) datePicker.getModel().getValue(), photo.getText()));
-					}
-				});
-
-				cancelButton.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						FrameDemo.super.getContentPane().removeAll();
-						FrameDemo.super.add(panel);
-						repaint();
-
-						System.out.println(service.listEtudiant());
-
-					}
-				});
-
-			}
-
-		});
-
-		liste.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				FrameDemo.super.getContentPane().removeAll();
-				students = service.listEtudiant();
-				FrameDemo.super.add(panel);
-				repaint();
-				refresh();
-				System.out.println(service.listEtudiant());
-
-			}
-
-		});
-
-
+		
 		super.add(panel);
-		panel.setVisible(true);
-		super.setJMenuBar(menuBar);
+		panel.add(new JScrollPane(table));
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(600, 400);
@@ -446,6 +413,14 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 	public void refresh() {
 		students = service.listEtudiant();
+
+		//revalidate vider l'image 
+		//		JLabel labelTable = new JLabel("Liste");
+		//		panel.add(labelTable);
+		// table = new JTable(new Object[][] {tableStudents}, columns);
+
+
+	
 		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
 		DefaultTableModel modele = new DefaultTableModel();
 		modele.setColumnIdentifiers(columns);
@@ -466,7 +441,8 @@ public class FrameDemo extends JFrame implements WindowListener {
 		}
 		table.setModel(modele);
 		FrameDemo.log.debug(students);
-	
+		panel.setVisible(true);
+
 	}
 
 	public void windowActivated(WindowEvent event) {

@@ -17,7 +17,7 @@ import jdk.internal.org.jline.utils.Log;
 
 public class EtudiantDaoFile implements IEtudiantDao{
 	List<Student> liste;
-	
+
 	public List<Student> listStudents() {
 		liste = new ArrayList <Student>();
 		File f = new File("students.txt");
@@ -47,19 +47,21 @@ public class EtudiantDaoFile implements IEtudiantDao{
 				e.printStackTrace();
 			}
 		}
-	
+
 		return liste;
 	}
 
 	public void add(Student e) {
 		List <Student> liste = listStudents();
-		if(e.getIdStudent() < Student.getListStudents()) {
-			System.out.println("ooooo");
-			System.out.println(e);
-			liste.set(e.getIdStudent(),update(e));
-			System.out.println(liste.get(e.getIdStudent()));
+		if(e.getIdStudent() <= Student.getListStudents() && liste.size()!= 0) {
+			for (int i = 0 ; i < liste.size(); i++) {
+				if (e.getIdStudent() == liste.get(i).getIdStudent()) {
+					liste.remove(i);
+					liste.add(i,e);
+				}
+			}
 		} else {
-		liste.add(e);
+			liste.add(e);
 		}
 		File f = new File("students.txt");
 		if (!f.exists()) {
@@ -80,7 +82,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("Liste " + liste);
+		System.out.println(liste);
 
 	}
 
@@ -88,7 +90,7 @@ public class EtudiantDaoFile implements IEtudiantDao{
 		liste = listStudents();
 		for (int i = 0 ; i < liste.size(); i++) {
 			if (e.getIdStudent() == liste.get(i).getIdStudent()) {
-				liste.set(i, e);
+				add(e);
 				break;
 			}
 		}
@@ -97,3 +99,11 @@ public class EtudiantDaoFile implements IEtudiantDao{
 	}
 
 }
+// chercher ancien supp ancien par nouveau
+
+
+//liste.get(e.getIdStudent()).setNom(e.getNom());
+//liste.get(e.getIdStudent()).setPrenom(e.getPrenom());
+//liste.get(e.getIdStudent()).setPhoto(e.getPhoto());
+//liste.get(e.getIdStudent()).setMotDePasse(e.getMotDePasse());
+//liste.get(e.getIdStudent()).setDateDeNaissance(e.getDateDeNaissance());

@@ -53,11 +53,12 @@ public class EtudiantDaoFile implements IEtudiantDao{
 
 	public void add(Student e) {
 		List <Student> liste = listStudents();
-		if(e.getIdStudent() <= Student.getListStudents() && liste.size()!= 0) {
+		if(e.getIdStudent() <= liste.size() && liste.size()!= 0) {
 			for (int i = 0 ; i < liste.size(); i++) {
 				if (e.getIdStudent() == liste.get(i).getIdStudent()) {
 					liste.remove(i);
 					liste.add(i,e);
+					break;
 				}
 			}
 		} else {

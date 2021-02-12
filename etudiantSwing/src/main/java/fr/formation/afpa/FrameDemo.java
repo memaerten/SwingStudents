@@ -13,6 +13,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -332,7 +333,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 	public FrameDemo() {
 		super("Frame Demo");
 		panel = new JPanel(new GridLayout());
-		
+
 		table = new JTable();
 
 		JMenuBar menuBar = new JMenuBar();
@@ -340,6 +341,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 		JMenuItem add = new JMenuItem("Ajouter");
 		JMenuItem liste = new JMenuItem("Liste");
 
+		students = new ArrayList<Student>();
 
 		menuBar.add(studentBar);
 		studentBar.add(add);
@@ -353,7 +355,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 			public void actionPerformed(ActionEvent e) {
 				ajouter();
 			}
-			});
+		});
 
 		liste.addActionListener(new ActionListener() {
 
@@ -368,7 +370,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 
 		super.setJMenuBar(menuBar);
-		
+
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -400,7 +402,7 @@ public class FrameDemo extends JFrame implements WindowListener {
 
 			}
 		});
-		
+
 		super.add(panel);
 		panel.add(new JScrollPane(table));
 
@@ -420,13 +422,11 @@ public class FrameDemo extends JFrame implements WindowListener {
 		// table = new JTable(new Object[][] {tableStudents}, columns);
 
 
-	
+
 		String[] columns = {"id", "Nom", "Prénom", "Date de naissance"};
 		DefaultTableModel modele = new DefaultTableModel();
 		modele.setColumnIdentifiers(columns);
-		if (students.size() == 0) {
-
-		} else {
+		if (students.size() != 0) {
 			Object[] tableStudents = new Object[4];
 			for (int i = 0; i < students.size() ; i++) {
 				Object student = students.get(i);
